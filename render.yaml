@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: cartresq-super-admin
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        fromDatabase:
+          name: cartresq-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
+    domains:
+      - cartresq-admin.onrender.com

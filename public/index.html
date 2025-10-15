@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CartResQ Super Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .sidebar { width: 250px; }
+        .main-content { margin-left: 250px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-900">CartResQ Super Admin</h1>
+                <p class="text-gray-600">Access the admin panel</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="password" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <button type="submit" id="loginBtn" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                    Login
+                </button>
+                
+                <div id="loginError" class="text-red-500 text-sm hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Admin Panel -->
+    <div id="adminPanel" class="hidden">
+        <!-- Sidebar -->
+        <div class="sidebar fixed h-full bg-white shadow-lg">
+            <div class="p-6 border-b">
+                <h1 class="text-xl font-bold text-gray-900">CartResQ Admin</h1>
+                <p class="text-sm text-gray-600">Super Admin Panel</p>
+            </div>
+            
+            <nav class="mt-6">
+                <a href="#" onclick="showSection('dashboard')" class="nav-link block px-6 py-3 text-gray-700 hover:bg-gray-100 border-r-2 border-transparent hover:border-blue-500">
+                    📊 Dashboard
+                </a>
+                <a href="#" onclick="showSection('users')" class="nav-link block px-6 py-3 text-gray-700 hover:bg-gray-100 border-r-2 border-transparent hover:border-blue-500">
+                    👥 Users
+                </a>
+                <a href="#" onclick="showSection('analytics')" class="nav-link block px-6 py-3 text-gray-700 hover:bg-gray-100 border-r-2 border-transparent hover:border-blue-500">
+                    📈 Analytics
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-0 w-full p-6 border-t">
+                <button onclick="logout()" class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboardSection" class="p-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
+                    <p class="text-gray-600">Monitor your CartResQ platform</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-blue-100 rounded-full">
+                                <span class="text-blue-600 text-xl">👥</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">Total Users</p>
+                                <p id="totalUsers" class="text-2xl font-bold text-gray-900">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-green-100 rounded-full">
+                                <span class="text-green-600 text-xl">✅</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">Active Users</p>
+                                <p id="activeUsers" class="text-2xl font-bold text-gray-900">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-purple-100 rounded-full">
+                                <span class="text-purple-600 text-xl">💳</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">Subscribed Users</p>
+                                <p id="subscribedUsers" class="text-2xl font-bold text-gray-900">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-yellow-100 rounded-full">
+                                <span class="text-yellow-600 text-xl">❌</span>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">Inactive Users</p>
+                                <p id="inactiveUsers" class="text-2xl font-bold text-gray-900">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscription Breakdown -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Subscription Plans</h3>
+                        <div id="subscriptionBreakdown" class="space-y-3">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Users</h3>
+                        <div id="recentUsers" class="space-y-3">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="usersSection" class="p-8 hidden">
+                <div class="mb-8">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-900">User Management</h1>
+                            <p class="text-gray-600">Manage all users in the system</p>
+                        </div>
+                        <button onclick="showAddUserModal()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                            Add New User
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input type="text" id="searchUsers" placeholder="Search users..." class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select id="filterRole" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Roles</option>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                            <option value="super_admin">Super Admin</option>
+                        </select>
+                        <select id="filterStatus" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                        <select id="filterSubscription" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Subscriptions</option>
+                            <option value="free">Free</option>
+                            <option value="starter">Starter</option>
+                            <option value="professional">Professional</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subscription</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="mt-6 flex justify-center">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analyticsSection" class="p-8 hidden">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">Analytics</h1>
+                    <p class="text-gray-600">Detailed platform analytics</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Coming Soon</h3>
+                    <p class="text-gray-600">Advanced analytics features will be available here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg p-6 w-full max-w-md">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Add New User</h3>
+                    <button onclick="hideAddUserModal()" class="text-gray-400 hover:text-gray-600">
+                        <span class="text-2xl">&times;</span>
+                    </button>
+                </div>
+                
+                <form id="addUserForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                        <input type="text" id="newUserName" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="newUserEmail" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="newUserPassword" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                        <select id="newUserRole" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                            <option value="super_admin">Super Admin</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Subscription Plan</label>
+                        <select id="newUserSubscription" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">No Plan</option>
+                            <option value="free">Free</option>
+                            <option value="starter">Starter</option>
+                            <option value="professional">Professional</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button type="submit" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                            Add User
+                        </button>
+                        <button type="button" onclick="hideAddUserModal()" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
