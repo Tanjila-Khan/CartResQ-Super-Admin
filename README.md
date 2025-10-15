@@ -25,7 +25,7 @@ npm install
 
 3. Create a `.env` file with your database connection:
 ```env
-MONGODB_URI=mongodb://localhost:27017/cartresq
+MONGODB_URI=existing url of cartresq
 JWT_SECRET=your-super-secret-jwt-key
 PORT=3001
 ```
