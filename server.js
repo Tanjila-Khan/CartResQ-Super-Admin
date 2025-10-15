@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Connect to your existing CartResQ database
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/cartresq', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://crqtest1:ocZ7Gc9NzE46eNsy@cartresq.nem6vpu.mongodb.net/?retryWrites=true&w=majority&appName=CartResQ', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
